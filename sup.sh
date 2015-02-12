@@ -48,7 +48,7 @@ _make() {
 	rsync -a "${EXT_PATH}/python-2.6.2" /opt
 
 	local readonly GCC_ENV=(
-		"PATH=/opt/gcc-4.4.2/bin:/opt/gcc_infrastructure/bin:/opt/python-2.6.2/bin:$EXT_PATH/gperf-3.0.4-1/bin:$EXT_PATH/apache-maven/bin:$PATH"
+		"PATH=/opt/gcc-4.4.2/bin:/opt/gcc_infrastructure/bin:/opt/python-2.6.2/bin:$EXT_PATH/gperf-3.0.4-1/bin:$PATH"
 		"LD_LIBRARY_PATH=/opt/gcc_infrastructure/lib:/opt/python-2.6.2/lib:$EXT_PATH/lib"
 	)
 	make devel "${GCC_ENV[@]}" # HOME="$(pwd)"
