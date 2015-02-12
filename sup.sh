@@ -10,15 +10,18 @@ install_packages() {
 	local readonly PACKAGES=(
 		flex
 		bison
+		glibc-devel
+		pam-devel
 		make
 		java-1.7.0-openjdk-devel
-		perl
 
-		man
-		vim-enhanced
+		# i don't understand why we need the distro's libxml2
+		libxml2-devel
+		# i don't understand why this isn't part of ext
+		libidn-devel
+
 		wget
-		curl
-		pam-devel
+		rsync
 	)
 
 	env http_proxy="${APT_PROXY}" yum install -y "${PACKAGES[@]}"
@@ -39,14 +42,16 @@ _make() {
 
 	local readonly EXT_PATH=/orca/ext/rhel5_x86_64
 
-	local readonly GCC_ENV=(
-		"PATH=/opt/gcc-4.4.2/bin:/opt/gcc_infrastructure/bin:$EXT_PATH/python-2.6.2/bin:$PATH"
-		"LD_LIBRARY_PATH=/opt/gcc_infrastructure/lib:$EXT_PATH/python-2.6.2/lib:$EXT_PATH/lib"
-	)
 	export JAVA_HOME=/usr/lib/jvm/java
 	make sync_tools http_proxy="${APT_PROXY}"
+	# sad pandas
+	rsync -a "${EXT_PATH}/python-2.6.2" /opt
 
-	make devel "${GCC_ENV[@]}" HOME="$(pwd)"
+	local readonly GCC_ENV=(
+		"PATH=/opt/gcc-4.4.2/bin:/opt/gcc_infrastructure/bin:/opt/python-2.6.2/bin:$EXT_PATH/gperf-3.0.4-1/bin:$EXT_PATH/apache-maven/bin:$PATH"
+		"LD_LIBRARY_PATH=/opt/gcc_infrastructure/lib:/opt/python-2.6.2/lib:$EXT_PATH/lib"
+	)
+	make devel "${GCC_ENV[@]}" # HOME="$(pwd)"
 
 	popd
 }
